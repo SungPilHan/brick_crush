@@ -1,1 +1,1 @@
-this is class diagram directory
+Here is class diagram directory.
