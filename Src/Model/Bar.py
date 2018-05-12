@@ -2,19 +2,16 @@
 #-*- coding: utf-8 -*-
 
 class Bar:
-    def __init__(self):
-        self.canvas = None
-        self.starting_posX = None
-        self.starting_posY = None
-        self.id = None
-        self.sizeX1 = None
-        self.sizeY1 = None
-        self.sizeX2 = None
-        self.sizeY2 = None
+    def __init__(self, canvas, x1, y1, x2, y2, sp_x, sp_y):
+        self.canvas = canvas
+        self.starting_posX = sp_x
+        self.starting_posY = sp_y
+        self.id = canvas.create_rectangel(x1, y1, x2, y2, fill = color)
+        self.sizeX1 = x1
+        self.sizeY1 = y1
+        self.sizeX2 = x2
+        self.sizeY2 = y2
 
-    def __init__(self, canvas):
-        pass
-
-    def get_id(self, ):
-        pass
+    def get_id(self):
+        return self.id
 

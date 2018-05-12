@@ -2,23 +2,22 @@
 #-*- coding: utf-8 -*-
 
 class Ball:
-    def __init__(self):
-        self.canvas = None
-        self.starting_posX = None
-        self.starting_posY = None
-        self.id = None
-        self.starting_direction = None
-        self.sizeX1 = None
-        self.sizeY1 = None
-        self.sizeX2 = None
-        self.sizeY2 = None
+    def __init__(self, canvas, sp_x, sp_y, x1, y1, x2, y2):
+        self.canvas = canvas
+        self.starting_posX = sp_x
+        self.starting_posY = sp_y
+        self.starting_direction = [-3, -2, -1, 1, 2, 3]
+        self.sizeX1 = x1
+        self.sizeY1 = y1
+        self.sizeX2 = x2
+        self.sizeY2 = y2
+        self.posX = random.shuffle(starting_direction)[0]
+        self.posY = -3
+        self.id = canvas.create_oval(x1, y1, x2, y2, fill = color)
 
-    def __init__(self, canvas ):
-        pass
+    def draw(self, posX, posY):
+        self.canvas.move(self.id, posX, posY)
 
-    def draw(self, X , Y ):
-        pass
-
-    def get_id(self, ):
-        pass
+    def get_id(self):
+        return self.id
 
