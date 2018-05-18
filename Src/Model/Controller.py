@@ -1,8 +1,11 @@
 #-*- coding: utf-8 -*-
+from Tkinter import Canvas, Tk
+
 from tkinter import *
 import random
 import time
 
+# 상속?????
 class Ball(object):
         def __init__(self, canvas):
                 self.canvas = canvas
@@ -14,10 +17,10 @@ class Ball(object):
                 self.sizeX2 = 25
                 self.sizeY2 = 25
                 random.shuffle(self.starting_direction)
-                self.posX = self.starting_direction[0]
-                self.posY = -3
+                self.posX = self.starting_direction[0]      # starting_direciton 리스트에서 뽑은 랜덤한 X방향으로 이동, 각도를 결정
+                self.posY = -3                              # 공을 위쪽 방향으로 이동
                 self.id = self.canvas.create_oval(self.sizeX1, self.sizeY1, self.sizeX2, self.sizeY2, fill = 'red')
-                self.canvas.move(self.id, self.starting_posX, self.starting_posY)
+                self.canvas.move(self.id, self.starting_posX, self.starting_posY) # (x,y)로 공을 이동
 
         def set_posX(self, x):
                 self.posX = x
@@ -78,22 +81,23 @@ class Brick:
 class Controller:
     def __init__(self, tk):
         self.tk = tk
-        self.canvas = Canvas(self.tk,width=500,height=400,bd=0,highlightthickness=0)
-        self.canvas.pack()
+        self.canvas = Canvas(self.tk,width=500,height=400) # 게임 화면을 그린다. 가로, 세로 사이즈를 지정한다.
+        self.canvas.pack() # 앞서 설정한 캔버스를 화면에 추가한다.
         self.tk.update()
         self.canvas_height = self.canvas.winfo_height()
         self.canvas_width = self.canvas.winfo_width()
+        # Ball, Bar 객체와 Brick 객체를 담기위한 리스트 bricks 생성
         self.ball = Ball(self.canvas)
         self.ball_id = self.ball.get_id()
         self.bar = Bar(self.canvas)
         self.bar_id = self.bar.get_id()
         self.bricks = []
-        self.bias = 1
+        self.bias = -10
         for i in range(0, 4):
             for j in range(0, 5):
                 self.bricks.append(Brick(self.canvas, 55*j+120, 30*i))
-        self.canvas.bind_all('<KeyPress-Left>', self.bar.set_posX_left)
-        self.canvas.bind_all('<KeyPress-Right>', self.bar.set_posX_right)
+        self.canvas.bind_all('<KeyPress-Left>', self.bar.set_posX_left)     # 왼쪽 방향키에 bar.set_posX_left()를 바인딩
+        self.canvas.bind_all('<KeyPress-Right>', self.bar.set_posX_right)   # 오른쪽 방향키에 bar.set_posX_right()를 바인딩
 
     def collision_ball_wall(self):
         ball_pos = self.canvas.coords(self.ball_id)
@@ -110,8 +114,8 @@ class Controller:
     def collision_ball_bar(self):
         ball_pos = self.canvas.coords(self.ball_id)
         bar_pos = self.canvas.coords(self.bar_id)
-        if ball_pos[0] >= bar_pos[0] + self.bias:
-                if ball_pos[2] <= bar_pos[2] + self.bias:
+        if ball_pos[0] >= (bar_pos[0] + self.bias):
+                if ball_pos[2] <= (bar_pos[2] - self.bias):
                         if ball_pos[3] >= bar_pos[1]:
                                 if ball_pos[3] <= bar_pos[3]:
                                         self.ball.set_posY(-3)
@@ -132,7 +136,7 @@ class Controller:
                         self.ball.set_posY(3)
 
                 #공이 벽돌의 윗변에 맞았을 때
-                elif ball_pos[1] <= brick_pos[1] and ball_pos[3] >= brick_pos[1] and ball_pos[0] >= brick_pos[0] + self.bias and ball_pos[2] <= brick_pos[2] + self.bias:
+                if ball_pos[1] <= brick_pos[1] and ball_pos[3] >= brick_pos[1] and ball_pos[0] >= brick_pos[0] + self.bias and ball_pos[2] <= brick_pos[2] + self.bias:
                         self.canvas.delete(i.get_id())
                         try:
                                 self.bricks.remove(i)
@@ -141,7 +145,7 @@ class Controller:
                         self.ball.set_posY(-3)
 
                 #공이 벽돌의 왼쪽에 맞았을 때
-                elif ball_pos[0] <= brick_pos[0] and ball_pos[2] >= brick_pos[0] and ball_pos[1] >= brick_pos[1] + self.bias and ball_pos[3] <= brick_pos[3] + self.bias:
+                if ball_pos[0] <= brick_pos[0] and ball_pos[2] >= brick_pos[0] and ball_pos[1] >= brick_pos[1] + self.bias and ball_pos[3] <= brick_pos[3] + self.bias:
                         self.canvas.delete(i.get_id())
                         try:
                                 self.bricks.remove(i)
@@ -150,7 +154,7 @@ class Controller:
                         self.ball.set_posX(-3)
 
                 #공이 벽돌의 오른쪽에 맞았을 때
-                elif ball_pos[0] <= brick_pos[2] and ball_pos[2] >= brick_pos[2] and ball_pos[1] >= brick_pos[1] + self.bias and ball_pos[3] <= brick_pos[3] + self.bias:
+                if ball_pos[0] <= brick_pos[2] and ball_pos[2] >= brick_pos[2] and ball_pos[1] >= brick_pos[1] + self.bias and ball_pos[3] <= brick_pos[3] + self.bias:
                         self.canvas.delete(i.get_id())
                         try:
                                 self.bricks.remove(i)
@@ -182,12 +186,10 @@ class Controller:
                     time.sleep(0.005)
                     
 if __name__=="__main__":
-        tk = Tk()
-        tk.title("test")
+        tk = Tk() # 창을 생성한다.
+        tk.title("test") # 제목 설정
         tk.resizable(0,0)
         tk.wm_attributes("-topmost",1)
         cs = Controller(tk)
-        print("1")
         cs.draw_all()
-        print("2")
 
